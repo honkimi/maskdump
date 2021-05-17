@@ -1,12 +1,12 @@
 require 'active_support'
 require 'active_support/core_ext'
-require 'maskdump/mask/tel'
-require 'maskdump/mask/email'
-require 'maskdump/mask/blackout'
+require 'maskdump/mask_type/tel'
+require 'maskdump/mask_type/email'
+require 'maskdump/mask_type/blackout'
 
 module Maskdump
   class Mask
-    DIR_PREFIX = "maskdump/mask".freeze
+    DIR_PREFIX = "maskdump/mask_type".freeze
 
     def initialize(records, column_settings)
       @column_settings = column_settings
@@ -15,18 +15,18 @@ module Maskdump
 
     def mask
       @column_settings.each_with_object(@records) do |column_setting, arr|
-        arr = mask_klass(column_setting).new(arr, column_setting[:name]).mask
+        arr = mask_type_klass(column_setting).new(arr, column_setting[:name]).mask
       end
     end
 
     private
 
-    def mask_klass(column_setting)
+    def mask_type_klass(column_setting)
       klass = File.join(DIR_PREFIX, column_setting[:method]).classify.safe_constantize
-      klass ? klass : custom_mask_klass(column_setting[:method])
+      klass ? klass : custom_mask_type_klass(column_setting[:method])
     end
 
-    def custom_mask_klass(method)
+    def custom_mask_type_klass(method)
       paths = plugin_paths(method)
       raise "TODO" if paths.empty?
       require paths.first

@@ -1,5 +1,5 @@
 module Maskdump
-  module Mask
+  module MaskType
     class Tel
       def initialize(records, column_name)
         @records = records

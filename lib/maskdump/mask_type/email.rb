@@ -1,5 +1,5 @@
 module Maskdump
-  module Mask
+  module MaskType
     class Email
       def initialize(records, column_name)
         @records = records

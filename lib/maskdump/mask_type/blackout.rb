@@ -1,5 +1,5 @@
 module Maskdump
-  module Mask
+  module MaskType
     class Blackout
       BLACKOUT_CHAR = "#"
 
