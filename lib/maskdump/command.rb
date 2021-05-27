@@ -19,7 +19,7 @@ module Maskdump
         table = Table.new(table_setting[:name])
         next if table.records.blank?
         masked_records = Mask.new(table.records, table_setting[:columns]).mask
-        query = BulkInsert.generate(table.name, masked_records, table.columns, @setting)
+        query = Query.generate_insert_statements(table.name, masked_records, table.columns, @setting)
         File.open(options[:output], 'a') do |f|
           f.puts "\n"
           f.puts query

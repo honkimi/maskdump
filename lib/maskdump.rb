@@ -5,5 +5,5 @@ module Maskdump
   autoload :Setting, 'maskdump/setting'
   autoload :Table, 'maskdump/table'
   autoload :Mask, 'maskdump/mask'
-  autoload :BulkInsert, 'maskdump/bulk_insert'
+  autoload :Query, 'maskdump/query'
 end

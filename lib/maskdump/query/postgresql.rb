@@ -1,13 +1,9 @@
-module Maskdump
-  module BulkInsert
-    class Mysql
-      def initialize(table_name, records, columns)
-        @table_name = table_name
-        @records = records
-        @columns = columns
-      end
+require 'maskdump/query/base'
 
-      def generate
+module Maskdump
+  module Query
+    class Postgresql < Base
+      def generate_insert_statements
         "INSERT INTO #{@table_name} (#{@columns.join(", ")}) VALUES #{value_clause};"
       end
 
