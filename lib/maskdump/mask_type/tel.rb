@@ -1,16 +1,18 @@
+require 'maskdump/mask_type/base'
+
 module Maskdump
   module MaskType
-    class Tel
-      def initialize(records, column_name)
-        @records = records
-        @column_name = column_name
+    class Tel < Base
+      attr_reader :counter
+      def initialize(records, column_name, args)
+        super
         @counter = 0
       end
 
       def mask
-        @records.each do |record|
-          record[@column_name] = process(record[@column_name])
-          @counter += 1
+        records.each do |record|
+          record[column_name] = process(record[column_name])
+          self.counter += 1
         end
       end
 
@@ -26,7 +28,7 @@ module Maskdump
       end
 
       def set_counter_number(only_number_tel)
-        only_number_tel[0..(@counter.to_s.size - 1)] = @counter.to_s
+        only_number_tel[0..(self.counter.to_s.size - 1)] = self.counter.to_s
       end
 
       def fill_in_zero(only_number_tel)

@@ -1,8 +1,6 @@
 require 'active_support'
 require 'active_support/core_ext'
-require 'maskdump/mask_type/tel'
-require 'maskdump/mask_type/email'
-require 'maskdump/mask_type/blackout'
+Dir["#{__dir__}/mask_type/*.rb"].each {|file| require file }
 
 module Maskdump
   class Mask
@@ -15,15 +13,19 @@ module Maskdump
 
     def mask
       @column_settings.each_with_object(@records) do |column_setting, arr|
-        arr = mask_type_klass(column_setting).new(arr, column_setting[:name]).mask
+        begin
+          arr = mask_type_klass(column_setting).new(arr, column_setting[:name], column_setting[:mask][:args]).mask
+        rescue Exception => e
+          raise e.exception("Failed mask in `#{column_setting[:name]}'. #{e.message}")
+        end
       end
     end
 
     private
 
     def mask_type_klass(column_setting)
-      klass = File.join(DIR_PREFIX, column_setting[:method]).classify.safe_constantize
-      klass ? klass : custom_mask_type_klass(column_setting[:method])
+      klass = File.join(DIR_PREFIX, column_setting[:mask][:type]).classify.safe_constantize
+      klass ? klass : custom_mask_type_klass(column_setting[:mask][:type])
     end
 
     def custom_mask_type_klass(method)

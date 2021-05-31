@@ -2,9 +2,7 @@ require 'maskdump/mask_type/base'
 
 module Maskdump
   module MaskType
-    class Blackout < Base
-      BLACKOUT_CHAR = "#"
-
+    class Replace < Base
       def mask
         records.each do |record|
           record[column_name] = process(record[column_name])
@@ -13,9 +11,9 @@ module Maskdump
 
       private
 
-      def process(record)
-        return record unless record.is_a?(String)
-        record.each_char.map{ BLACKOUT_CHAR }.join
+      def process(_record)
+        raise 'mask type :replace is requires args :to.' if args[:to].blank?
+        args[:to]
       end
     end
   end
