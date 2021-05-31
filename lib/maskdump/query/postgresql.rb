@@ -11,12 +11,22 @@ module Maskdump
 
       def value_clause
         @records.map do |record|
-          "(#{quote(record).join(", ")})"
+          "(#{cast(record).join(", ")})"
         end.join(", ")
       end
 
-      def quote(record)
-        record.values.map{ |value| "'#{value}'" }
+      def cast(record)
+        record.values.map do |value|
+          if value.is_a?(Numeric)
+            value
+          elsif value.nil?
+            'null'
+          elsif !!value === value
+            value.to_s
+          else
+            "'#{value}'"
+          end
+        end
       end
     end
   end
