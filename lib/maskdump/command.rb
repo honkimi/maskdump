@@ -5,17 +5,23 @@ require 'active_record'
 module Maskdump
   class Command < Thor
 
-    class_option :database, type: :string, aliases: "-d", banner: 'database'
-    class_option :user,     type: :array,  aliases: "-u", banner: 'user'
-    class_option :password, type: :string, aliases: "-p", banner: 'password'
-    class_option :output,   type: :string, aliases: "-o", banner: 'output', required: true
-    class_option :verbose,  type: :boolean, aliases: "-v", banner: 'verbose'
+    class_option :database,       type: :string, aliases: "-d", banner: 'database'
+    class_option :user,           type: :array,  aliases: "-u", banner: 'user'
+    class_option :password,       type: :string, aliases: "-p", banner: 'password'
+    class_option :output,         type: :string, aliases: "-o", banner: 'output', required: true
+    class_option :verbose,        type: :boolean, aliases: "-v", banner: ''
+    class_option :'data-only', type: :boolean, aliases: "-do", banner: ''
 
     desc "dump", "dump"
     def dump(yaml)
       @setting = Setting.new(yaml, options)
       connect_db
-      ActiveRecord::Tasks::DatabaseTasks.structure_dump(@setting.db_setting_hash, options[:output])
+      if options[:'data-only']
+        File.open(options[:output], 'w') {}
+      else
+        ActiveRecord::Tasks::DatabaseTasks.structure_dump(@setting.db_setting_hash, options[:output])
+      end
+
       progress = 0
       tables_size = @setting.tables.size
       @setting.tables.each do |table_setting|
