@@ -10,7 +10,7 @@ module Maskdump
     class_option :password,       type: :string, aliases: "-p", banner: 'password'
     class_option :output,         type: :string, aliases: "-o", banner: 'output', required: true
     class_option :verbose,        type: :boolean, aliases: "-v", banner: ''
-    class_option :'data-only', type: :boolean, aliases: "-a", banner: ''
+    class_option :'data-only',    type: :boolean, aliases: "-a", banner: ''
 
     desc "dump", "dump"
     def dump(yaml)
