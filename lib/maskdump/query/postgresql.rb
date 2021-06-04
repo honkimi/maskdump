@@ -4,7 +4,7 @@ module Maskdump
   module Query
     class Postgresql < Base
       def generate_insert_statements
-        "INSERT INTO #{@table_name} (#{@columns.map{|c|"`#{c}`"}.join(", ")}) VALUES #{value_clause};"
+        "INSERT INTO #{@table_name} (#{@columns.map{|c|"\"#{c}\""}.join(", ")}) VALUES #{value_clause};"
       end
 
       private
