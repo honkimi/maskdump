@@ -5,7 +5,7 @@ module Maskdump
       def initialize(records, column_name, args)
         @records = records
         @column_name = column_name
-        @args = args
+        @args = args || {}
       end
 
       def mask
