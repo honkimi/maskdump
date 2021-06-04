@@ -35,6 +35,7 @@ $ gem install maskdump
 # tables.yml
 ---
 user: root
+password: pass
 host: localhost
 port: 3306
 db: 
@@ -44,17 +45,50 @@ tables:
   - name: owners
     columns: 
       - name: phone_number
-        method: tel # Data Masking Method
+        mask:
+          type: tel # Data Masking Type
   - name: users
     columns: 
       - name: mail
-        method: email # Data Masking Method
+        mask:
+          type: email # Data Masking Type
+          args:
+            domain: hoge.com # Useful args for only part of masking types
+      - name: name
+        mask:
+          type: replace # Data Masking Type
+          args:
+            to: anonymous # Useful args for only part of masking types
 ```
 
-2. execute maskdump command
+|Masking type|Description|Supported args|
+|---|---|---|
+|blackout|Replace strings with # of the same length.| |
+|email|Replace with a unique and random email address. The domain will be @example.com by default, but you can specify any in the argument :domain.|:domain|
+|replace|Replace with an arbitrary value. The argument :to is required.|:to|
+|tel|Replace with a unique phone number.| |
+
+2. check options
 
 ```
-$ maskdump tables.yml --dist sample -p xxxxx
+$ maskdump -h                                                                                                                                                                                                   +(master) 
+Commands:
+  maskdump dump            # dump
+  maskdump help [COMMAND]  # Describe available commands or one specific command
+
+Options:
+  -d, [--database=database]            
+  -u, [--user=user]                    
+  -p, [--password=password]            
+  -o, --output=output                  
+  -v, [--verbose], [--no-verbose]      
+  -a, [--data-only], [--no-data-only]  
+```
+
+3. execute maskdump command
+
+```
+$ maskdump dump tables.yml -o output.sql -v
 ```
 
 ## Development
